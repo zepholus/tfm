@@ -1,7 +1,7 @@
 from prophet import Prophet as Prophetfb
 import numpy as np
 import src.ForecastingModel as ForecastingModel
-from src.fittedModel import ProphetFittedModel
+from src.ProphetFittedModel import ProphetFittedModel
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objs as go
@@ -14,7 +14,7 @@ logger.setLevel(logging.CRITICAL)
 
 class Prophet(ForecastingModel.ForecastingModel):
 
-    def __init__(self, changepoint_prior_scale = 0.05, seasonality_prior_scale =  10):
+    def __init__(self, station_name = "default_name", changepoint_prior_scale = 0.05, seasonality_prior_scale =  10):
         self.changepoint_prior_scale = changepoint_prior_scale
         self.seasonality_prior_scale = seasonality_prior_scale
         m = Prophetfb(interval_width=0.98, 
@@ -24,6 +24,7 @@ class Prophet(ForecastingModel.ForecastingModel):
         
 
         self.m = m
+        self.station_name = station_name
 
         
     """
@@ -50,7 +51,7 @@ class Prophet(ForecastingModel.ForecastingModel):
             raise Exception('y column is not numeric')
                
 
-        return ProphetFittedModel(self.m.fit(_df), _df)
+        return ProphetFittedModel(self.m.fit(_df), _df, self.station_name)
     
 
     
